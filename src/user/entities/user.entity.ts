@@ -2,6 +2,7 @@ import { BeforeInsert, Column, Entity } from 'typeorm';
 import { BaseEntity } from '../../common/base.entity';
 import * as bcrypt from 'bcryptjs';
 import * as gravatar from 'gravatar';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User extends BaseEntity {
@@ -9,6 +10,7 @@ export class User extends BaseEntity {
   public email: string;
 
   @Column()
+  @Exclude()
   public password: string;
 
   @Column()

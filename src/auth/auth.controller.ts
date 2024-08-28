@@ -5,8 +5,10 @@ import { User } from '../user/entities/user.entity';
 import { LocalAuthGuard } from './guardies/local-auth.guard';
 import { RequestWithUserInterface } from './interfaces/requestWithUser.interface';
 import { JwtAuthGuard } from './guardies/jwt-auth.guard';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
