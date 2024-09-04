@@ -46,4 +46,14 @@ export class AuthService {
     });
     return token;
   }
+
+  // refreshToken 생성하는 함수
+  public generateRefreshToken(userId: string) {
+    const payload: TokenPayloadInterface = { userId };
+    const token = this.jwtService.sign(payload, {
+      secret: this.configService.get('REFRESH_TOKEN_SECURITY'),
+      expiresIn: this.configService.get('REFRESH_TOKEN_EXPIRATION_TIME'),
+    });
+    return token;
+  }
 }

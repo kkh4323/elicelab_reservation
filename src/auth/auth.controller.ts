@@ -5,7 +5,8 @@ import { User } from '../user/entities/user.entity';
 import { LocalAuthGuard } from './guardies/local-auth.guard';
 import { RequestWithUserInterface } from './interfaces/requestWithUser.interface';
 import { JwtAuthGuard } from './guardies/jwt-auth.guard';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { LoginUserDto } from '../user/dto/login-user.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -21,11 +22,13 @@ export class AuthController {
   //로그인
   @Post('/login')
   @UseGuards(LocalAuthGuard)
+  @ApiBody({ type: LoginUserDto })
   async loggedInUser(@Req() req: RequestWithUserInterface): Promise<object> {
     const { user } = req;
-    const token = await this.authService.generateAccessToken(user.id);
+    const accessToken = await this.authService.generateAccessToken(user.id);
+    const refreshToken = await this.authService.generateRefreshToken(user.id);
 
-    return { user, token };
+    return { user, accessToken, refreshToken };
   }
 
   //유저 정보 가져오기

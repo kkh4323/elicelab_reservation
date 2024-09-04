@@ -14,6 +14,8 @@ import * as Joi from '@hapi/joi';
         SERVER_PORT: Joi.number().required(),
         ACCESS_TOKEN_SECURITY: Joi.string().required(),
         ACCESS_TOKEN_EXPIRATION_TIME: Joi.string().required(),
+        REFRESH_TOKEN_SECURITY: Joi.string().required(),
+        REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
       }),
     }),
   ],
