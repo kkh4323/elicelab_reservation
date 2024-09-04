@@ -19,6 +19,7 @@ import { LoginUserDto } from '../user/dto/login-user.dto';
 import { EmailUserDto } from '../user/dto/email-user.dto';
 import { VerifyEmailDto } from '../user/dto/verify-email.dto';
 import { GoogleAuthGuard } from './guardies/google-auth.gurad';
+import { KakaoAuthGuard } from './guardies/kakao-auth.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -78,6 +79,22 @@ export class AuthController {
   @Get('/google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleLoginCallback(@Req() req: RequestWithUserInterface) {
+    return req.user;
+  }
+
+  // 카카오 로그인
+  @HttpCode(200)
+  @Get('/kakao')
+  @UseGuards(KakaoAuthGuard)
+  async kakaoLogin() {
+    return HttpStatus.OK;
+  }
+
+  // 카카오 로그인 콜백
+  @HttpCode(200)
+  @Get('/kakao/callback')
+  @UseGuards(KakaoAuthGuard)
+  async kakaoLoginCallback(@Req() req: RequestWithUserInterface) {
     return req.user;
   }
 }
