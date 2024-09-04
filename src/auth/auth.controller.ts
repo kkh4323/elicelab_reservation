@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Post, Req, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { User } from '../user/entities/user.entity';
@@ -9,6 +18,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { EmailUserDto } from '../user/dto/email-user.dto';
 import { VerifyEmailDto } from '../user/dto/verify-email.dto';
+import { GoogleAuthGuard } from './guardies/google-auth.gurad';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -53,5 +63,21 @@ export class AuthController {
   @Post('/email/verify')
   async verifyEmailWithCode(@Body() verifyEmailDto: VerifyEmailDto) {
     return await this.authService.verifyEmail(verifyEmailDto);
+  }
+
+  // 구글 로그인
+  @HttpCode(200)
+  @Get('/google')
+  @UseGuards(GoogleAuthGuard)
+  async googleLogin() {
+    return HttpStatus.OK;
+  }
+
+  // 구글 로그인 콜백
+  @HttpCode(200)
+  @Get('/google/callback')
+  @UseGuards(GoogleAuthGuard)
+  async googleLoginCallback(@Req() req: RequestWithUserInterface) {
+    return req.user;
   }
 }
