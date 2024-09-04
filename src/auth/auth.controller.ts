@@ -20,6 +20,7 @@ import { EmailUserDto } from '../user/dto/email-user.dto';
 import { VerifyEmailDto } from '../user/dto/verify-email.dto';
 import { GoogleAuthGuard } from './guardies/google-auth.gurad';
 import { KakaoAuthGuard } from './guardies/kakao-auth.guard';
+import { NaverAuthGuard } from './guardies/naver-auth.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -79,7 +80,12 @@ export class AuthController {
   @Get('/google/callback')
   @UseGuards(GoogleAuthGuard)
   async googleLoginCallback(@Req() req: RequestWithUserInterface) {
-    return req.user;
+    const user = await req.user;
+
+    const accessToken = await this.authService.generateAccessToken(user.id);
+    const refreshToken = await this.authService.generateRefreshToken(user.id);
+
+    return { user, accessToken, refreshToken };
   }
 
   // 카카오 로그인
@@ -95,6 +101,22 @@ export class AuthController {
   @Get('/kakao/callback')
   @UseGuards(KakaoAuthGuard)
   async kakaoLoginCallback(@Req() req: RequestWithUserInterface) {
+    return req.user;
+  }
+
+  // 네이버 로그인
+  @HttpCode(200)
+  @Get('/naver')
+  @UseGuards(NaverAuthGuard)
+  async naverLogin() {
+    return HttpStatus.OK;
+  }
+
+  // 네이버 로그인 콜백
+  @HttpCode(200)
+  @Get('/naver/callback')
+  @UseGuards(NaverAuthGuard)
+  async naverLoginCallback(@Req() req: RequestWithUserInterface) {
     return req.user;
   }
 }
