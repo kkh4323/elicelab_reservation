@@ -7,6 +7,8 @@ import { RequestWithUserInterface } from './interfaces/requestWithUser.interface
 import { JwtAuthGuard } from './guardies/jwt-auth.guard';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from '../user/dto/login-user.dto';
+import { EmailUserDto } from '../user/dto/email-user.dto';
+import { VerifyEmailDto } from '../user/dto/verify-email.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -31,12 +33,25 @@ export class AuthController {
     return { user, accessToken, refreshToken };
   }
 
-  //유저 정보 가져오기
+  // 유저 정보 가져오기
   @Get()
   @UseGuards(JwtAuthGuard)
   async getUserInfoByToken(
     @Req() req: RequestWithUserInterface,
   ): Promise<User> {
     return req.user;
+  }
+
+  // 가입 완료 이메일 전송
+  @Post('/email/send')
+  @ApiBody({ type: EmailUserDto })
+  async sendEmail(@Body() emailUserDto: EmailUserDto) {
+    return await this.authService.sendEmail(emailUserDto);
+  }
+
+  // 인증코드 비교
+  @Post('/email/verify')
+  async verifyEmailWithCode(@Body() verifyEmailDto: VerifyEmailDto) {
+    return await this.authService.verifyEmail(verifyEmailDto);
   }
 }
