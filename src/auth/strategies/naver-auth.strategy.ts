@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-naver-v2';
 import { ConfigService } from '@nestjs/config';
@@ -24,6 +24,30 @@ export class NaverAuthStrategy extends PassportStrategy(Strategy) {
     profile: any,
     done: VerifyCallback,
   ) {
-    done(null, profile);
+    const { nickname, email, provider, mobile, profileImage } = profile;
+    try {
+      const user = await this.userService.getUserByEmail(email);
+      if (user.provider !== provider) {
+        const err = new HttpException(
+          `You are already subscribed to ${user.provider}.`,
+          HttpStatus.CONFLICT,
+        );
+        done(err, null);
+      }
+      done(null, user);
+    } catch (err) {
+      if (err.status === 404) {
+        const newUser = await this.userService.createUser({
+          username: nickname,
+          email,
+          phone: mobile,
+          provider,
+          profileImg: profileImage,
+        });
+        done(null, newUser);
+      } else {
+        done(err, null);
+      }
+    }
   }
 }
