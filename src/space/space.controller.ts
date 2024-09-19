@@ -1,9 +1,19 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { SpaceService } from './space.service';
 import { CreateSpaceDto } from './dto/create-space.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { RoleGuard } from '../auth/guardies/role.guard';
 import { Role } from '../user/entities/role.enum';
+import { Space } from './entities/space.entity';
 
 @Controller('space')
 @ApiTags('space')
@@ -12,7 +22,7 @@ export class SpaceController {
   constructor(private readonly spaceService: SpaceService) {}
 
   @Post('/create')
-  async createSpace(@Body() createSpaceDto: CreateSpaceDto) {
+  async createSpace(@Body() createSpaceDto: CreateSpaceDto): Promise<Space> {
     return await this.spaceService.createSpace(createSpaceDto);
   }
 
@@ -22,7 +32,20 @@ export class SpaceController {
   }
 
   @Get('/:id')
-  async getSpaceById(@Param('id') id: string) {
+  async getSpaceById(@Param('id') id: string): Promise<Space> {
     return await this.spaceService.getSpaceById(id);
+  }
+
+  @Put('/:id')
+  async updateSpaceById(
+    @Param('id') id: string,
+    @Body() updateSpaceDto: CreateSpaceDto,
+  ) {
+    return await this.spaceService.updateSpaceById(id, updateSpaceDto);
+  }
+
+  @Delete('/:id')
+  async deleteSpaceById(@Param('id') id: string) {
+    return await this.spaceService.deleteSpaceById(id);
   }
 }
