@@ -3,6 +3,9 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Space } from './entities/space.entity';
 import { Repository } from 'typeorm';
 import { CreateSpaceDto } from './dto/create-space.dto';
+import { PageOptionsDto } from '../common/dtos/page-options.dto';
+import { PageDto } from '../common/dtos/page.dto';
+import { PageMetaDto } from '../common/dtos/page-meta.dto';
 
 @Injectable()
 export class SpaceService {
@@ -19,8 +22,19 @@ export class SpaceService {
   }
 
   // [관리자] 공간 전체 가져오는 로직
-  async getSpaces() {
-    return await this.spaceRepository.find({});
+  async getSpaces(pageOptionsDto: PageOptionsDto): Promise<PageDto<Space>> {
+    // return await this.spaceRepository.find({});
+    const queryBuilder = this.spaceRepository.createQueryBuilder('space');
+    queryBuilder
+      .orderBy('space.createdAt', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+    return new PageDto(entities, pageMetaDto);
   }
 
   // [관리자] id로 공간 데이터 하나 불러오는 로직
