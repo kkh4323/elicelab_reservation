@@ -27,6 +27,7 @@ async function bootstrap() {
   const config = new DocumentBuilder()
     .setTitle('elicelab_reservation api')
     .setDescription('elicelab reservation website api')
+    .addBearerAuth()
     .setVersion('1.0')
     .addTag('elicelab')
     .build();

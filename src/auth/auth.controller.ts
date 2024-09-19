@@ -14,7 +14,7 @@ import { User } from '../user/entities/user.entity';
 import { LocalAuthGuard } from './guardies/local-auth.guard';
 import { RequestWithUserInterface } from './interfaces/requestWithUser.interface';
 import { JwtAuthGuard } from './guardies/jwt-auth.guard';
-import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiBody, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from '../user/dto/login-user.dto';
 import { EmailUserDto } from '../user/dto/email-user.dto';
 import { VerifyEmailDto } from '../user/dto/verify-email.dto';
@@ -47,6 +47,7 @@ export class AuthController {
 
   // 유저 정보 가져오기
   @Get()
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   async getUserInfoByToken(
     @Req() req: RequestWithUserInterface,
@@ -101,7 +102,11 @@ export class AuthController {
   @Get('/kakao/callback')
   @UseGuards(KakaoAuthGuard)
   async kakaoLoginCallback(@Req() req: RequestWithUserInterface) {
-    return req.user;
+    const user = await req.user;
+    const accessToken = await this.authService.generateAccessToken(user.id);
+    const refreshToken = await this.authService.generateRefreshToken(user.id);
+
+    return { user, accessToken, refreshToken };
   }
 
   // 네이버 로그인
@@ -117,6 +122,10 @@ export class AuthController {
   @Get('/naver/callback')
   @UseGuards(NaverAuthGuard)
   async naverLoginCallback(@Req() req: RequestWithUserInterface) {
-    return req.user;
+    const user = await req.user;
+    const accessToken = await this.authService.generateAccessToken(user.id);
+    const refreshToken = await this.authService.generateRefreshToken(user.id);
+
+    return { user, accessToken, refreshToken };
   }
 }
