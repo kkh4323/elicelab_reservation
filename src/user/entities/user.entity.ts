@@ -4,6 +4,7 @@ import * as bcrypt from 'bcryptjs';
 import * as gravatar from 'gravatar';
 import { Provider } from './provider.enum';
 import { AgreeOfTerm } from '../../agree-of-term/entities/agree-of-term.entity';
+import { Role } from './role.enum';
 
 @Entity()
 export class User extends BaseEntity {
@@ -25,6 +26,14 @@ export class User extends BaseEntity {
     default: Provider.LOCAL,
   })
   public provider: Provider;
+
+  @Column({
+    type: 'enum',
+    enum: Role,
+    array: true,
+    default: [Role.USER],
+  })
+  public roles: Role[];
 
   @Column({ nullable: true })
   public profileImg?: string;
