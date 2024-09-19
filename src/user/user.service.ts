@@ -1,9 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
+import { PageOptionsDto } from '../common/dtos/page-options.dto';
+import { PageDto } from '../common/dtos/page.dto';
+import { PageMetaDto } from '../common/dtos/page-meta.dto';
 
 @Injectable()
 export class UserService {
@@ -13,9 +15,26 @@ export class UserService {
   ) {}
 
   //전체 유저 가져오는 로직
-  async getUsers(): Promise<User[]> {
-    const users = await this.userRepository.find();
-    return users;
+  async getUsers(pageOptionsDto: PageOptionsDto): Promise<PageDto<User>> {
+    // const users = await this.userRepository.find();
+    // return users;
+    const queryBuilder = this.userRepository.createQueryBuilder('user');
+    if (pageOptionsDto.username) {
+      queryBuilder.andWhere('user.username = :username', {
+        username: pageOptionsDto.username,
+      });
+    }
+    queryBuilder
+      .leftJoinAndSelect('user.agreeOfTerm', 'agreeOfTerm')
+      .orderBy('user.createdAt', pageOptionsDto.order)
+      .skip(pageOptionsDto.skip)
+      .take(pageOptionsDto.take);
+
+    const itemCount = await queryBuilder.getCount();
+    const { entities } = await queryBuilder.getRawAndEntities();
+
+    const pageMetaDto = new PageMetaDto({ itemCount, pageOptionsDto });
+    return new PageDto(entities, pageMetaDto);
   }
 
   //유저 생성하는 로직
