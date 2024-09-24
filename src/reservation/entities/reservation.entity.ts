@@ -4,7 +4,7 @@ import { Space } from '../../space/entities/space.entity';
 import { User } from '../../user/entities/user.entity';
 
 @Entity()
-@Unique(['user', 'space', 'reservationDate'])
+@Unique(['user', 'space', 'reservationDate', 'startTime'])
 export class Reservation extends BaseEntity {
   @OneToOne(() => User, {
     eager: true,

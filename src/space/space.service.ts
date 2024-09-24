@@ -27,6 +27,16 @@ export class SpaceService {
   ): Promise<PageDto<Space>> {
     // return await this.spaceRepository.find({});
     const queryBuilder = this.spaceRepository.createQueryBuilder('space');
+    if (pageOptionsDto.location) {
+      queryBuilder.andWhere('space.location = :location', {
+        location: pageOptionsDto.location,
+      });
+    }
+    if (pageOptionsDto.zone) {
+      queryBuilder.andWhere('space.zone = :zone', {
+        zone: pageOptionsDto.zone,
+      });
+    }
     queryBuilder
       .orderBy('space.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
