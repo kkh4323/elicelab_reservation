@@ -10,9 +10,10 @@ import { RedisModule } from './redis/redis.module';
 import { UserInfoModule } from './user-info/user-info.module';
 import { AgreeOfTermModule } from './agree-of-term/agree-of-term.module';
 import { SpaceModule } from './space/space.module';
+import { ReservationModule } from './reservation/reservation.module';
 
 @Module({
-  imports: [AppConfigModule, DatabaseModule, UserModule, AuthModule, EmailModule, RedisModule, UserInfoModule, AgreeOfTermModule, SpaceModule],
+  imports: [AppConfigModule, DatabaseModule, UserModule, AuthModule, EmailModule, RedisModule, UserInfoModule, AgreeOfTermModule, SpaceModule, ReservationModule],
   controllers: [AppController],
   providers: [AppService],
 })

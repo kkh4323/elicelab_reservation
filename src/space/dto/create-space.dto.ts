@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 import { Location } from '../entities/location.enum';
+import { Zone } from '../entities/zone.enum';
 
 export class CreateSpaceDto {
   @ApiProperty({ example: '미팅룸 A' })
@@ -17,13 +18,21 @@ export class CreateSpaceDto {
 
   @ApiProperty({ example: 1 })
   @IsNumber()
-  maxPeople: number;
+  maxPeople?: number;
+
+  @ApiProperty({
+    description: 'zone',
+    default: Zone.MEETING,
+    enum: Zone,
+  })
+  @IsString()
+  zone: Zone;
 
   @ApiProperty({ example: '공공장소이니 깨끗이 사용해주세요.' })
   @IsString()
   description: string;
 
   @ApiProperty()
-  @IsString()
-  imgs: string;
+  @IsArray()
+  spaceImg: string[];
 }
