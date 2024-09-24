@@ -1,13 +1,11 @@
 import { Space } from '../../space/entities/space.entity';
 import { User } from '../../user/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateUserDto } from '../../user/dto/create-user.dto';
-import { CreateSpaceDto } from '../../space/dto/create-space.dto';
 
 export class CreateReservationDto {
   user: User;
 
-  @ApiProperty({ example: 'id' })
+  @ApiProperty({ example: 'spaceId' })
   space: Space;
 
   @ApiProperty({
