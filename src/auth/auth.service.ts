@@ -18,6 +18,7 @@ import { Cache } from 'cache-manager';
 import { CACHE_MANAGER } from '@nestjs/common/cache';
 import { VerifyEmailDto } from '../user/dto/verify-email.dto';
 import { EmailUserDto } from '../user/dto/email-user.dto';
+import { Provider } from '../user/entities/provider.enum';
 
 @Injectable()
 export class AuthService {
@@ -32,7 +33,10 @@ export class AuthService {
   // 회원가입 로직
   async signinUser(createUserDto: CreateUserDto): Promise<User> {
     try {
-      const createdUser = await this.userService.createUser(createUserDto);
+      const createdUser = await this.userService.createUser({
+        ...createUserDto,
+        provider: Provider.LOCAL,
+      });
 
       await this.emailService.sendMail({
         to: createUserDto.email,

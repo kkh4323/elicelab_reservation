@@ -21,19 +21,19 @@ export class CreateQuestionDto {
   @ApiProperty({ example: 30 })
   participants: number;
 
-  @ApiProperty({
-    description: 'location',
-    default: Location.SEOUL,
-    enum: Location,
-  })
-  location: Location;
+  // @ApiProperty({
+  //   description: 'location',
+  //   default: Location.SEOUL,
+  //   enum: Location,
+  // })
+  location: string;
 
-  @ApiProperty({
-    description: 'zone',
-    default: Zone.MEETING,
-    enum: Zone,
-  })
-  zone: Zone[];
+  // @ApiProperty({
+  //   description: 'zone',
+  //   default: Zone.MEETING,
+  //   enum: Zone,
+  // })
+  zone: string;
 
   @ApiProperty({ example: 'test' })
   documentAddress: string;
