@@ -3,9 +3,9 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
-import { PageOptionsDto } from '../common/dtos/page-options.dto';
 import { PageDto } from '../common/dtos/page.dto';
 import { PageMetaDto } from '../common/dtos/page-meta.dto';
+import { UserPageOptionsDto } from '../common/dtos/user-page-options.dto';
 
 @Injectable()
 export class UserService {
@@ -15,7 +15,7 @@ export class UserService {
   ) {}
 
   //전체 유저 가져오는 로직
-  async getUsers(pageOptionsDto: PageOptionsDto): Promise<PageDto<User>> {
+  async getUsers(pageOptionsDto: UserPageOptionsDto): Promise<PageDto<User>> {
     // const users = await this.userRepository.find();
     // return users;
     const queryBuilder = this.userRepository.createQueryBuilder('user');

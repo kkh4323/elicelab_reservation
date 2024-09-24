@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Space } from './entities/space.entity';
 import { Repository } from 'typeorm';
 import { CreateSpaceDto } from './dto/create-space.dto';
-import { PageOptionsDto } from '../common/dtos/page-options.dto';
+import { SpacePageOptionsDto } from '../common/dtos/space-page-options.dto';
 import { PageDto } from '../common/dtos/page.dto';
 import { PageMetaDto } from '../common/dtos/page-meta.dto';
 
@@ -22,7 +22,9 @@ export class SpaceService {
   }
 
   // [관리자] 공간 전체 가져오는 로직
-  async getSpaces(pageOptionsDto: PageOptionsDto): Promise<PageDto<Space>> {
+  async getSpaces(
+    pageOptionsDto: SpacePageOptionsDto,
+  ): Promise<PageDto<Space>> {
     // return await this.spaceRepository.find({});
     const queryBuilder = this.spaceRepository.createQueryBuilder('space');
     queryBuilder

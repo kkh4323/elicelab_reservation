@@ -13,7 +13,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/guardies/jwt-auth.guard';
 import { RequestWithUserInterface } from '../auth/interfaces/requestWithUser.interface';
 import { CreateReservationDto } from './dto/create-reservation.dto';
-import { PageOptionsDto } from '../common/dtos/page-options.dto';
+import { SpacePageOptionsDto } from '../common/dtos/space-page-options.dto';
 
 @Controller('reservation')
 @ApiBearerAuth()
@@ -35,7 +35,7 @@ export class ReservationController {
 
   // 전체 공간 예약 정보 가져오는 api
   @Get()
-  async getReservations(@Query() pageOptionsDto: PageOptionsDto) {
+  async getReservations(@Query() pageOptionsDto: SpacePageOptionsDto) {
     return null;
   }
 

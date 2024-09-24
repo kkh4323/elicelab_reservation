@@ -15,8 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { RoleGuard } from '../auth/guardies/role.guard';
 import { Role } from '../user/entities/role.enum';
 import { Space } from './entities/space.entity';
-import { PageOptionsDto } from '../common/dtos/page-options.dto';
-import { PageDto } from '../common/dtos/page.dto';
+import { SpacePageOptionsDto } from '../common/dtos/space-page-options.dto';
 
 @Controller('space')
 @ApiTags('space')
@@ -30,7 +29,7 @@ export class SpaceController {
   }
 
   @Get()
-  async getSpaces(@Query() pageOptionsDto: PageOptionsDto) {
+  async getSpaces(@Query() pageOptionsDto: SpacePageOptionsDto) {
     return await this.spaceService.getSpaces(pageOptionsDto);
   }
 

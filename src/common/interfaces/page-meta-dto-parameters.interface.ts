@@ -1,6 +1,6 @@
-import { PageOptionsDto } from '../dtos/page-options.dto';
+import { SpacePageOptionsDto } from '../dtos/space-page-options.dto';
 
 export interface PageMetaDtoParameters {
-  pageOptionsDto: PageOptionsDto;
+  pageOptionsDto: SpacePageOptionsDto;
   itemCount: number;
 }
