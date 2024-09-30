@@ -25,22 +25,20 @@ export class Question extends BaseEntity {
   @Column()
   public participants: number;
 
-  // @Column({
-  //   type: 'enum',
-  //   enum: Location,
-  //   default: Location.SEOUL,
-  // })
-  @Column()
-  public location: string;
+  @Column({
+    type: 'enum',
+    enum: Location,
+    default: Location.SEOUL,
+  })
+  public location: Location;
 
-  // @Column({
-  //   type: 'enum',
-  //   enum: Zone,
-  //   default: [Zone.MEETING],
-  //   array: true,
-  // })
-  @Column()
-  public zone: string;
+  @Column({
+    type: 'enum',
+    enum: Zone,
+    array: true,
+    default: [Zone.MEETING],
+  })
+  public zone: Zone[];
 
   @Column()
   public documentAddress: string;

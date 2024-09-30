@@ -6,7 +6,6 @@ import { User } from '../user/entities/user.entity';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { BufferedFile } from '../minio-client/file.model';
 import { MinioClientService } from '../minio-client/minio-client.service';
-import useRealTimers = jest.useRealTimers;
 
 @Injectable()
 export class QuestionService {
