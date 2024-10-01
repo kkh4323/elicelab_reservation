@@ -23,9 +23,30 @@ export class UserService {
     // const users = await this.userRepository.find();
     // return users;
     const queryBuilder = this.userRepository.createQueryBuilder('user');
+    // 유저 검색 조건(이름, 이메일, 전화번호, 회원유형)
     if (pageOptionsDto.username) {
       queryBuilder.andWhere('user.username = :username', {
         username: pageOptionsDto.username,
+      });
+    }
+    if (pageOptionsDto.email) {
+      queryBuilder.andWhere('user.email = :email', {
+        email: pageOptionsDto.email,
+      });
+    }
+    if (pageOptionsDto.phone) {
+      queryBuilder.andWhere('user.phone = :phone', {
+        phone: pageOptionsDto.phone,
+      });
+    }
+    // if (pageOptionsDto.roles) {
+    //   queryBuilder.andWhere('user.roles = :roles', {
+    //     roles: pageOptionsDto.roles,
+    //   });
+    // }
+    if (pageOptionsDto.roles) {
+      queryBuilder.andWhere(`array_to_string(user.roles, ',') ILIKE :roles`, {
+        roles: `%${pageOptionsDto.roles}%`,
       });
     }
     queryBuilder
@@ -60,6 +81,16 @@ export class UserService {
     const user = await this.userRepository.findOneBy({ id });
     if (user) return user;
     throw new HttpException('user is not exists', HttpStatus.NOT_FOUND);
+  }
+
+  // 아이디로 유저 삭제하는 로직
+  async deleteUserById(id: string) {
+    const user = await this.userRepository.findOneBy({ id });
+    if (user) {
+      await this.userRepository.delete({ id });
+      return `${id} is deleted successfully`;
+    }
+    throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
   }
 
   // RefreshToken 매칭

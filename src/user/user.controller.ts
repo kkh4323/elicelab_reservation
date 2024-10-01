@@ -1,4 +1,11 @@
-import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { UserService } from './user.service';
 import { RoleGuard } from '../auth/guardies/role.guard';
 import { Role } from './entities/role.enum';
@@ -17,4 +24,15 @@ export class UserController {
   async getUsers(@Query() pageOptionsDto: UserPageOptionsDto) {
     return await this.userService.getUsers(pageOptionsDto);
   }
+
+  @Delete('/:id')
+  @ApiBearerAuth()
+  @UseGuards(RoleGuard(Role.ADMIN))
+  async deleteUserById(@Param('id') id: string) {
+    return await this.userService.deleteUserById(id);
+  }
+
+  // @Get('/:id')
+  // @UseGuards(RoleGuard(Role.ADMIN))
+  // async getUserById(@Param())
 }

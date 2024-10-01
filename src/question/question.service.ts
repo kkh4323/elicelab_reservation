@@ -36,6 +36,13 @@ export class QuestionService {
       user,
     });
     await this.questionRepository.save(newQuestion);
+    // 일반 유저에게 보내는 메일
+    await this.emailService.sendMail({
+      // from: 'kdp@elice.io',
+      to: user.email,
+      subject: `[외부 대관] 엘리스랩 ${createQuestionDto.group} ${createQuestionDto.eventName} 대관 신청`,
+      html: `<h1>${createQuestionDto.group} ${createQuestionDto.eventName} 대관 신청</h1>`,
+    });
     return newQuestion;
   }
 }
