@@ -98,23 +98,31 @@ export class AuthService {
   }
 
   // accessToken 생성하는 함수
-  public generateAccessToken(userId: string): string {
+  public generateAccessToken(userId: string): {
+    accessToken: string;
+    accessCookie: string;
+  } {
     const payload: TokenPayloadInterface = { userId };
-    const token = this.jwtService.sign(payload, {
+    const accessToken = this.jwtService.sign(payload, {
       secret: this.configService.get('ACCESS_TOKEN_SECURITY'),
       expiresIn: this.configService.get('ACCESS_TOKEN_EXPIRATION_TIME'),
     });
-    return token;
+    const accessCookie = `Authentication=${accessToken}; Path=/; Max-Age=${this.configService.get('ACCESS_TOKEN_EXPIRATION_TIME')}`;
+    return { accessToken, accessCookie };
   }
 
   // refreshToken 생성하는 함수
-  public generateRefreshToken(userId: string) {
+  public generateRefreshToken(userId: string): {
+    refreshToken: string;
+    refreshCookie: string;
+  } {
     const payload: TokenPayloadInterface = { userId };
-    const token = this.jwtService.sign(payload, {
+    const refreshToken = this.jwtService.sign(payload, {
       secret: this.configService.get('REFRESH_TOKEN_SECURITY'),
       expiresIn: this.configService.get('REFRESH_TOKEN_EXPIRATION_TIME'),
     });
-    return token;
+    const refreshCookie = `Refresh=${refreshToken}; Path=/; Max-Age=${this.configService.get('REFRESH_TOKEN_EXPIRATION_TIME')}`;
+    return { refreshToken, refreshCookie };
   }
 
   // 6자리 OTP 생성하는 함수
@@ -124,5 +132,14 @@ export class AuthService {
       OTP += Math.floor(Math.random() * 10);
     }
     return OTP;
+  }
+
+  async setCurrentRefreshTokenToRedis(refreshToken: string, userId: string) {
+    const saltValue = await bcrypt.genSalt(10);
+    const currentHashedRefreshToken = await bcrypt.hash(
+      refreshToken,
+      saltValue,
+    );
+    await this.cacheManager.set(userId, currentHashedRefreshToken);
   }
 }

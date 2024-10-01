@@ -6,6 +6,7 @@ import {
   HttpStatus,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
@@ -21,6 +22,8 @@ import { VerifyEmailDto } from '../user/dto/verify-email.dto';
 import { GoogleAuthGuard } from './guardies/google-auth.gurad';
 import { KakaoAuthGuard } from './guardies/kakao-auth.guard';
 import { NaverAuthGuard } from './guardies/naver-auth.guard';
+import { Response } from 'express';
+import { RefreshTokenGuard } from './guardies/refresh-token-guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -37,12 +40,28 @@ export class AuthController {
   @Post('/login')
   @UseGuards(LocalAuthGuard)
   @ApiBody({ type: LoginUserDto })
-  async loggedInUser(@Req() req: RequestWithUserInterface): Promise<object> {
+  async loggedInUser(
+    @Req() req: RequestWithUserInterface,
+    @Res() res: Response,
+  ): Promise<void> {
     const { user } = req;
-    const accessToken = await this.authService.generateAccessToken(user.id);
-    const refreshToken = await this.authService.generateRefreshToken(user.id);
+    const { accessToken, accessCookie } =
+      await this.authService.generateAccessToken(user.id);
+    const { refreshToken, refreshCookie } =
+      await this.authService.generateRefreshToken(user.id);
+    await this.authService.setCurrentRefreshTokenToRedis(refreshToken, user.id);
 
-    return { user, accessToken, refreshToken };
+    res.setHeader('Set-Cookie', [accessCookie, refreshCookie]);
+    res.send({ user });
+  }
+
+  @UseGuards(RefreshTokenGuard)
+  @Get('/refresh')
+  async refresh(@Req() req: RequestWithUserInterface) {
+    const { accessToken, accessCookie } =
+      await this.authService.generateAccessToken(req.user.id);
+    req.res.setHeader('Set-Cookie', accessCookie);
+    return { user: req.user, accessToken };
   }
 
   // 유저 정보 가져오기
@@ -80,13 +99,21 @@ export class AuthController {
   @HttpCode(200)
   @Get('/google/callback')
   @UseGuards(GoogleAuthGuard)
-  async googleLoginCallback(@Req() req: RequestWithUserInterface) {
+  async googleLoginCallback(
+    @Req() req: RequestWithUserInterface,
+    @Res() res: Response,
+  ) {
     const user = await req.user;
 
-    const accessToken = await this.authService.generateAccessToken(user.id);
-    const refreshToken = await this.authService.generateRefreshToken(user.id);
+    const { accessToken, accessCookie } =
+      await this.authService.generateAccessToken(user.id);
+    const { refreshToken, refreshCookie } =
+      await this.authService.generateRefreshToken(user.id);
 
-    return { user, accessToken, refreshToken };
+    await this.authService.setCurrentRefreshTokenToRedis(refreshToken, user.id);
+
+    res.setHeader('Set-Cookie', [accessCookie, refreshCookie]);
+    res.send({ user });
   }
 
   // 카카오 로그인
@@ -101,12 +128,20 @@ export class AuthController {
   @HttpCode(200)
   @Get('/kakao/callback')
   @UseGuards(KakaoAuthGuard)
-  async kakaoLoginCallback(@Req() req: RequestWithUserInterface) {
+  async kakaoLoginCallback(
+    @Req() req: RequestWithUserInterface,
+    @Res() res: Response,
+  ) {
     const user = await req.user;
-    const accessToken = await this.authService.generateAccessToken(user.id);
-    const refreshToken = await this.authService.generateRefreshToken(user.id);
+    const { accessToken, accessCookie } =
+      await this.authService.generateAccessToken(user.id);
+    const { refreshToken, refreshCookie } =
+      await this.authService.generateRefreshToken(user.id);
 
-    return { user, accessToken, refreshToken };
+    await this.authService.setCurrentRefreshTokenToRedis(refreshToken, user.id);
+
+    res.setHeader('Set-Cookie', [accessCookie, refreshCookie]);
+    res.send({ user });
   }
 
   // 네이버 로그인
@@ -121,11 +156,19 @@ export class AuthController {
   @HttpCode(200)
   @Get('/naver/callback')
   @UseGuards(NaverAuthGuard)
-  async naverLoginCallback(@Req() req: RequestWithUserInterface) {
+  async naverLoginCallback(
+    @Req() req: RequestWithUserInterface,
+    @Res() res: Response,
+  ) {
     const user = await req.user;
-    const accessToken = await this.authService.generateAccessToken(user.id);
-    const refreshToken = await this.authService.generateRefreshToken(user.id);
+    const { accessToken, accessCookie } =
+      await this.authService.generateAccessToken(user.id);
+    const { refreshToken, refreshCookie } =
+      await this.authService.generateRefreshToken(user.id);
 
-    return { user, accessToken, refreshToken };
+    await this.authService.setCurrentRefreshTokenToRedis(refreshToken, user.id);
+
+    res.setHeader('Set-Cookie', [accessCookie, refreshCookie]);
+    res.send({ user });
   }
 }
