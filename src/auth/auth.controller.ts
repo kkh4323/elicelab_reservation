@@ -55,6 +55,15 @@ export class AuthController {
     res.send({ user });
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Post('/logout')
+  async logout(@Req() req: RequestWithUserInterface) {
+    req.res.setHeader('Set-Cookie', this.authService.getCookiesForLogout());
+
+    await this.authService.deleteRefreshTokenInRedis(req.user.id);
+    return true;
+  }
+
   @UseGuards(RefreshTokenGuard)
   @Get('/refresh')
   async refresh(@Req() req: RequestWithUserInterface) {

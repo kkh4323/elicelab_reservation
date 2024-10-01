@@ -125,6 +125,14 @@ export class AuthService {
     return { refreshToken, refreshCookie };
   }
 
+  // 쿠키 초기화
+  public getCookiesForLogout(): string[] {
+    return [
+      `Authentication=; HttpOnly; Path=/; Max-Age=0`,
+      `Refresh=; HttpOnly; Path=/; Max-Age=0`,
+    ];
+  }
+
   // 6자리 OTP 생성하는 함수
   generateOTP() {
     let OTP = '';
@@ -134,6 +142,7 @@ export class AuthService {
     return OTP;
   }
 
+  // RefreshToken 암호화하여 Redis에 저장
   async setCurrentRefreshTokenToRedis(refreshToken: string, userId: string) {
     const saltValue = await bcrypt.genSalt(10);
     const currentHashedRefreshToken = await bcrypt.hash(
@@ -141,5 +150,10 @@ export class AuthService {
       saltValue,
     );
     await this.cacheManager.set(userId, currentHashedRefreshToken);
+  }
+
+  // id를 key값으로 하여 RefreshToken 삭제
+  async deleteRefreshTokenInRedis(userId: string) {
+    await this.cacheManager.del(userId);
   }
 }
