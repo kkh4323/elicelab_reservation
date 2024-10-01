@@ -6,6 +6,8 @@ import { User } from '../user/entities/user.entity';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { BufferedFile } from '../minio-client/file.model';
 import { MinioClientService } from '../minio-client/minio-client.service';
+import { EmailService } from '../email/email.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class QuestionService {
@@ -13,6 +15,8 @@ export class QuestionService {
     @InjectRepository(Question)
     private questionRepository: Repository<Question>,
     private readonly minioClientService: MinioClientService,
+    private readonly configService: ConfigService,
+    private readonly emailService: EmailService,
   ) {}
 
   // [관리자, 사용자] 대관 문의하는 로직

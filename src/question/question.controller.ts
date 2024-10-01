@@ -58,11 +58,15 @@ export class QuestionController {
           description: 'participants',
         },
         location: {
-          type: 'string',
+          enum: ['seoul', 'busan'],
           description: 'location',
         },
         zone: {
-          type: 'string',
+          type: 'array',
+          items: {
+            type: 'string',
+            enum: ['programming', 'meeting'],
+          },
           description: 'zone',
         },
         personalInfo: {

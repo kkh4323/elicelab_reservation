@@ -22,6 +22,7 @@ export class CreateQuestionDto {
   participants: number;
 
   @ApiProperty({
+    type: 'enum',
     description: 'location',
     default: Location.SEOUL,
     enum: Location,
@@ -29,6 +30,7 @@ export class CreateQuestionDto {
   location: Location;
 
   @ApiProperty({
+    type: 'enum',
     description: 'zone',
     default: Zone.MEETING,
     enum: Zone,
