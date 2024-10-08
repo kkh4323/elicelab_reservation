@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+      body {
+          font-family: Arial, sans-serif;
+      }
+      table {
+          width: 100%;
+          border-collapse: collapse;
+          margin: 20px 0;
+      }
+      table, th, td {
+          border: 1px solid #ddd;
+          padding: 8px;
+      }
+      th {
+          background-color: #f2f2f2;
+          text-align: left;
+      }
+      h1 {
+          color: #333;
+      }
+      .footer {
+          margin-top: 20px;
+          text-align: center;
+          color: #888;
+      }
+  </style>
+</head>
+<body>
+  <h1>{{ group }} {{ eventName }} 대관 신청 정보</h1>
+  <table>
+    <tr>
+      <th>그룹명</th>
+      <td>{{ group }}</td>
+    </tr>
+    <tr>
+      <th>행사명</th>
+      <td>{{ eventName }}</td>
+    </tr>
+    <tr>
+      <th>행사 날짜</th>
+      <td>{{ eventDate }}</td>
+    </tr>
+    <tr>
+      <th>참여 인원</th>
+      <td>{{ participants }}</td>
+    </tr>
+    <tr>
+      <th>장소</th>
+      <td>{{ location }}</td>
+    </tr>
+    <tr>
+      <th>존</th>
+      <td>{{ zone }}</td>
+    </tr>
+    <tr>
+      <th>첨부 문서 주소</th>
+      <td>{{ documentAddress }}</td>
+    </tr>
+    <tr>
+      <th>개인정보 제공 여부</th>
+      <td>{{ personalInfo }}</td>
+    </tr>
+  </table>
+
+  <div class="footer">
+    <p>입력하신 사항이 맞으면 <a href="mailto:kdp@elice.io">kdp@elice.io</a>로 답장해 주세요.</p>
+  </div>
+</body>
+</html>
