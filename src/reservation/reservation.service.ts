@@ -44,6 +44,21 @@ export class ReservationService {
     return new PageDto(entities, pageMetaDto);
   }
 
+  // [사용자] 나의 예약 불러오는 로직
+  async getMyReservations(user: User) {
+    console.log(user);
+    // const myReservations = await this.reservationRepository.find();
+    // const queryBuilder =
+    //   this.reservationRepository.createQueryBuilder('reservation');
+    // queryBuilder
+    //   .orderBy('reservation.createdAt', pageOptionsDto.order)
+    //   .skip(pageOptionsDto.skip)
+    //   .take(pageOptionsDto.take);
+
+    // const itemCount = await queryBuilder.getCount();
+    // return myReservations;
+  }
+
   // [관리자, 사용자] id로 예약 데이터 하나 불러오는 로직
   async getReservationById(id: string) {
     const reservation = await this.reservationRepository.findOneBy({ id });

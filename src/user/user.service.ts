@@ -9,6 +9,7 @@ import { UserPageOptionsDto } from '../common/dtos/user-page-options.dto';
 import { CACHE_MANAGER } from '@nestjs/common/cache';
 import { Cache } from 'cache-manager';
 import * as bcrypt from 'bcryptjs';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -67,6 +68,15 @@ export class UserService {
     const newUser = await this.userRepository.create(createUserDto);
     await this.userRepository.save(newUser);
     return newUser;
+  }
+
+  // 유저 정보 수정하는 로직
+  async updateUserById(user: User, updateUserDto: UpdateUserDto) {
+    const result = await this.userRepository.update(user.id, updateUserDto);
+    if (!result.affected) {
+      throw new HttpException('Bad Request', HttpStatus.BAD_REQUEST);
+    }
+    return 'updated userInfo';
   }
 
   //이메일로 검색하는 로직

@@ -20,15 +20,14 @@ import { RoleGuard } from '../auth/guardies/role.guard';
 import { Role } from '../user/entities/role.enum';
 
 @Controller('reservation')
-@ApiBearerAuth()
 @ApiTags('reservation')
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 export class ReservationController {
   constructor(private readonly reservationService: ReservationService) {}
 
   // 공간 예약 api
   @Post()
-  @UseGuards(RoleGuard(Role.STUDENT))
+  // @UseGuards(RoleGuard(Role.STUDENT))
   async createReservation(
     @Req() req: RequestWithUserInterface,
     @Body() createReservationDto: CreateReservationDto,
@@ -42,13 +41,21 @@ export class ReservationController {
   // 전체 공간 예약 정보 가져오는 api
   @Get()
   async getReservations(@Query() pageOptionsDto: SpacePageOptionsDto) {
-    return null;
+    return await this.reservationService.getReservations(pageOptionsDto);
   }
 
   // 공간 예약 상세 정보 가져오는 api
   @Get('/:id')
   async getReservationById(@Param('id') id: string) {
     return await this.reservationService.getReservationById(id);
+  }
+
+  // 로그인한 유저의 예약 내역 가져오는 api
+  @Get('/me')
+  @UseGuards(JwtAuthGuard)
+  async getMyReservations(@Req() req: RequestWithUserInterface) {
+    // console.log('req.user: ', req.user);
+    return await this.reservationService.getMyReservations(req.user);
   }
 
   // 공간 예약 변경하는 api
