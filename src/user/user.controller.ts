@@ -48,6 +48,12 @@ export class UserController {
     return await this.userService.deleteUserById(id);
   }
 
+  @Delete()
+  @UseGuards(JwtAuthGuard)
+  async deleteMyId(@Req() req: RequestWithUserInterface) {
+    return await this.userService.deleteMyId(req.user);
+  }
+
   // @Get('/:id')
   // @UseGuards(RoleGuard(Role.ADMIN))
   // async getUserById(@Param())

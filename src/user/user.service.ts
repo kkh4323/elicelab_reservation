@@ -103,6 +103,15 @@ export class UserService {
     throw new HttpException('Something went wrong', HttpStatus.BAD_REQUEST);
   }
 
+  // 본인 계정 탈퇴하는 로직
+  async deleteMyId(user: User) {
+    const result = await this.userRepository.delete(user.id);
+    if (!result.affected) {
+      throw new HttpException('User is not exist', HttpStatus.NOT_FOUND);
+    }
+    return 'deleted user';
+  }
+
   // RefreshToken 매칭
   async getUserIfRefreshTokenMatches(refreshToken: string, userId: string) {
     const user = await this.getUserById(userId);

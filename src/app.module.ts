@@ -13,9 +13,24 @@ import { SpaceModule } from './space/space.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { QuestionModule } from './question/question.module';
 import { MinioClientModule } from './minio-client/minio-client.module';
+import { NoticeModule } from './notice/notice.module';
 
 @Module({
-  imports: [AppConfigModule, DatabaseModule, UserModule, AuthModule, EmailModule, RedisModule, UserInfoModule, AgreeOfTermModule, SpaceModule, ReservationModule, QuestionModule, MinioClientModule],
+  imports: [
+    AppConfigModule,
+    DatabaseModule,
+    UserModule,
+    AuthModule,
+    EmailModule,
+    RedisModule,
+    UserInfoModule,
+    AgreeOfTermModule,
+    SpaceModule,
+    ReservationModule,
+    QuestionModule,
+    MinioClientModule,
+    NoticeModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
