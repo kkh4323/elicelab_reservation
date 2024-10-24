@@ -30,9 +30,6 @@ export class Space extends BaseEntity {
   @Column()
   public description: string;
 
-  @Column('text', {
-    array: true,
-    nullable: true,
-  })
-  public spaceImg: string[];
+  @Column()
+  public spaceImg: string;
 }

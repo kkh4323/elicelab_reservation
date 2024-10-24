@@ -1,10 +1,19 @@
-import { BeforeInsert, Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import {
+  BeforeInsert,
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { BaseEntity } from '../../common/base.entity';
 import * as bcrypt from 'bcryptjs';
 import * as gravatar from 'gravatar';
 import { Provider } from './provider.enum';
 import { AgreeOfTerm } from '../../agree-of-term/entities/agree-of-term.entity';
 import { Role } from './role.enum';
+import { Comment } from '../../comment/entities/comment.entity';
+import { Notice } from '../../notice/entities/notice.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -51,6 +60,12 @@ export class User extends BaseEntity {
   //   default: TrackEnum.NORMAL,
   // })
   // public track: TrackEnum;
+
+  @OneToMany(() => Notice, (notice: Notice) => notice.user)
+  public notices?: string[];
+
+  @OneToMany(() => Comment, (comment: Comment) => comment.user)
+  public comments?: string[];
 
   @BeforeInsert()
   async beforeSaveFunction() {

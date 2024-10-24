@@ -33,6 +33,6 @@ export class CreateSpaceDto {
   description: string;
 
   @ApiProperty()
-  @IsArray()
-  spaceImg: string[];
+  @IsString()
+  spaceImg: string;
 }

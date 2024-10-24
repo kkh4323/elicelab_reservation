@@ -61,6 +61,8 @@ export class AuthService {
   // 로그인 로직
   async loginUser(loginUserDto: LoginUserDto): Promise<User> {
     const user = await this.userService.getUserByEmail(loginUserDto.email);
+    console.log('dtoPassword: ', loginUserDto.password);
+    console.log('userPassword: ', user.password);
     const isPasswordMatched = await bcrypt.compare(
       loginUserDto.password,
       user.password,
